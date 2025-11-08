@@ -1,0 +1,2 @@
+readInput = input
+write = print
