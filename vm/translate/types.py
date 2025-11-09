@@ -2,6 +2,8 @@ import re
 
 def primitive(code):
     # Strings entre comillas dobles (no greedy, captura vacíos)
+    code = re.sub(r'norm"([^"]*)"', lambda m: f"'{m.group(1)}'", code)
+    code = re.sub(r'r"([^"]*)"', lambda m: f"r'{m.group(1)}'", code)
     code = re.sub(r'"([^"]*)"', lambda m: f'String("{m.group(1)}")', code)
     # Booleanos: true/false
     code = re.sub(r"\b(true|false)\b", lambda m: f"Bool({1 if m.group(1) == 'true' else 0})", code)
