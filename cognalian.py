@@ -1,14 +1,4 @@
-# Cognalian Language Core — parte del proyecto IanLangs
-# Copyright (c) 2025 IanLangs
-#
-# Este archivo forma parte de Cognalian y está licenciado bajo la
-# GNU General Public License v3.0 o posterior.
-# Consulte el archivo LICENSE en la raíz del proyecto.
-#
-# Atribución requerida: IanLangs / Proyecto Cognalian
-# URL: https://github.com/IanLangs
-
-import json
+from ruamel.yaml import YAML
 import sys
 import vm.vm as vm
 from syntax.classtypes import *
@@ -30,8 +20,8 @@ def main():
             raise Exception("Usage: cog file or cog -info or cog file -r")
     elif len(sys.argv) == 2:
         if sys.argv[1] == "-info":
-            print(json.dumps(filesmanipule.rfile("./cognalian.json"), indent=4).replace(r"\n", """
-""").replace(r'"{', "{").replace(r'}"', "}").replace(r'\"', '"'))
+            with open("cognalian.yml", "r") as f:
+                print(f.read())
         else:
             vm.execute(sys.argv[1])
 

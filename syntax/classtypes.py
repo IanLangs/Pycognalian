@@ -47,7 +47,6 @@ class String(str):
             return re.split(r"\s+", str(self), maxsplit, flags)
         return re.split(sep, str(self), maxsplit, flags)
 
-
 print(float)
 class Number(float):
     def int(self):

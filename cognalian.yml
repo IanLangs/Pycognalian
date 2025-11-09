@@ -1,0 +1,8 @@
+language:
+  name: cognalian
+  filetype: cni
+  requeristments:
+    - signi: "No: reque"
+      "1": python
+    - signi: "No: optional?"
+      "1": true
