@@ -24,7 +24,7 @@ def main():
                 print(f.read())
         elif sys.argv[1] == "--version":
             with open("cognalian.yml", "r") as f:
-                print((yaml.load(f))["language"]["version"])
+                print(f"cognalian version {(yaml.load(f))["language"]["version"]}")
         else:
             vm.execute(sys.argv[1])
     else:

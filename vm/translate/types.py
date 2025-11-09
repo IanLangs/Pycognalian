@@ -40,13 +40,18 @@ def parse_collections(code):
         inner = parse_collections(inner)
         return f"Tuple({inner})"
 
+    def replace_index(m):
+        inner = (m.group(1), m.group(2))
+        if str(inner[0]) != "l":
+            return f"{inner[0]}[{inner[1]}]"
+        return f"[{inner[1]}]"
     # Diccionarios primero (con ":"), sets después (sin ":")
     code = re.sub(r"\{([^{}]*:[^{}]*)\}", replace_dict, code)
     code = re.sub(r"\{([^{}:]*)\}", replace_set, code)
 
     # Listas y tuplas (non-greedy)
     code = re.sub(r"\[([^\[\]]*?)\]", replace_list, code)
-    code = re.sub(r"([^\s])<(.*)>", lambda m: f"{m.group(1)}[{m.group(2)}]", code)
+    code = re.sub(r"([^\s])<(.*)>", replace_index, code)
     code = re.sub(r"\s\(([^\(\)]*?)\)", replace_tuple, code)
     code = re.sub(r"expr\((.*)\)", lambda m: f"({m.group(1)})", code)
     return code
