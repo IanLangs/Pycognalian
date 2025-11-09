@@ -49,7 +49,6 @@
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1": "true",
-    "git-widget-placeholder": "main",
     "junie.onboarding.icon.badge.shown": "true",
     "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
     "to.speed.mode.migration.done": "true"
@@ -71,7 +70,7 @@
       <updated>1762652543018</updated>
       <workItem from="1762652544269" duration="2599000" />
       <workItem from="1762658616899" duration="3291000" />
-      <workItem from="1762694253089" duration="4223000" />
+      <workItem from="1762694253089" duration="4799000" />
     </task>
     <task id="LOCAL-00001" summary="Add files via upload">
       <option name="closed" value="true" />
