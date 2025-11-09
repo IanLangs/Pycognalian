@@ -14,3 +14,7 @@ fn main(args):
     write: divide, multiply
     write: divide(x=237895*1623, y=1623)
     write: multiply(x=237895, y=1623)
+    k=regex.sub(r"\d", norm"d", readInput("insert a text: "))
+    k=regex.sub(r"\w", norm"w", k)
+    k=regex.sub(r"\s", norm"s", k)
+    write: k
