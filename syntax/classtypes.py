@@ -201,10 +201,10 @@ class Dict(dict):
         return Enum(**dict(self))
 class Set(set):pass
 
-import microlangs.regex as regex
-class regex(regex.regex):
-    class regexCompile(regex.regex.regexCompile):pass
-    class regexCompileTo(regex.regex.regexCompileTo):pass
+import microlangs.regex as _regex
+class regex(_regex.regex):
+    class regexCompile(_regex.regex.regexCompile):pass
+    class regexCompileTo(_regex.regex.regexCompileTo):pass
 
 class Lambda:
     def __init__(self, code:str, params:dict[str, Any]):

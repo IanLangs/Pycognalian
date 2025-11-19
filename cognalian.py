@@ -24,7 +24,7 @@ def main():
     elif len(sys.argv) == 2:
         if sys.argv[1] == "-info":
             with open("cognalian.yml", "r") as f:
-                print(f.read())
+                print(f.read().replace(r"\n", "\n").replace(r"\t", "\t"))
         elif sys.argv[1] == "--version":
             with open("cognalian.yml", "r") as f:
                 print(f"cognalian version {(yaml.load(f))["language"]["version"]}")

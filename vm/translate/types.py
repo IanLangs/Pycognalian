@@ -7,7 +7,7 @@ def primitive(code):
     # Booleanos: true/false
     code = re.sub(r"\b(true|false)\b", lambda m: f"Bool({1 if m.group(1) == 'true' else 0})", code)
     # Números (enteros o flotantes, opcional underscore)
-    code = re.sub(r"\b\d+(?:_\d+)*(?:\.\d+)?\b", lambda m: f"Number({m.group(0)})", code)
+    code = re.sub(r"\b[-\+]*?\d+(?:_\d+)*(?:\.\d+)?\b", lambda m: f"Number({m.group(0)})", code)
     # Complex
     code = re.sub(r"complex\((.*?)\)", lambda m: f"CNum({m.group(1)})", code)
     return code
@@ -20,24 +20,28 @@ def parse_collections(code):
     def replace_dict(m):
         inner = m.group(1)
         inner = parse_collections(inner)  # Recursivo para valores internos
+        inner = primitive(inner)
         return f"Dict({{{inner}}})"
 
     # Sets: {item, ...} que no tenga ":" dentro
     def replace_set(m):
         inner = m.group(1)
         inner = parse_collections(inner)
+        inner = primitive(inner)
         return f"Set({{{inner}}})"
 
     # Listas: [item, ...]
     def replace_list(m):
         inner = m.group(1)
         inner = parse_collections(inner)
+        inner = primitive(inner)
         return f"List([{inner}])"
 
     # Tuplas: (item, ...)
     def replace_tuple(m):
         inner = m.group(1)
         inner = parse_collections(inner)
+        inner = primitive(inner)
         return f"Tuple({inner})"
 
     def replace_index(m):

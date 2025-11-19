@@ -9,13 +9,10 @@ def translate(code):
     code = init.analize(code, init.pinit)
     code = pcow.analize(code, pcow.pcow)
     code = comments.all(code)
-    code = sentences.rw(code)
-    code = sentences.use(code)
-    code = sentences.fn(code)
-    code = sentences.loop(code)
+    code = sentences.all(code)
     code = types.all(code)
 
-    code = "import sys, os\nsys.path.append(os.path.dirname(__file__))\n" + code + "\nmain(List(sys.argv))"
+    code = f"import sys, os\nsys.path.append(os.path.dirname(__file__))\n{code}\nmain(List(sys.argv))"
     return code
 
 def execute(file):
