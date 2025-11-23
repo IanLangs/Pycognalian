@@ -19,9 +19,12 @@ def execute(file):
     code=filesmanipule.rfile(file)
     executeStr(code, file)
 
-def executeStr(code:str, path):
+def executeStr(code:str, path=None):
     code = translate(code)
-    exec(code, globals()|{"__file__":path}, locals())
+    if path is None:
+        exec(code, globals(), locals())
+    else:
+        exec(code, globals()|{"__file__":path}, locals())
 
 def returned(file):
     code=filesmanipule.rfile(file)

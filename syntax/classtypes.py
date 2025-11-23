@@ -35,9 +35,17 @@ class List(deque):
         return repr(list(self))
 class Bool(int):
     def __bool__(self):
-        return int(self) != 0
+        if int(self) == 0:
+            import random
+            if ru:=random.uniform(0.0,1.0) < 0.5:
+                return False
+            elif ru > 0.5:
+                return True
+            else:
+                return None
+        return int(self) > 0
     def __str__(self):
-        return str(bool(self))
+        return str(bool(self)).lowercase() if bool(self) != None else "null"
     __repr__ = __str__
 class String(str):
     def split(self, sep=None, maxsplit=0, flags=0):

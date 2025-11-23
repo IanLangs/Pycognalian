@@ -4,8 +4,10 @@ def primitive(code):
     # Strings entre comillas dobles (no greedy, captura vacíos)
     code = re.sub(r'r"([^"]*)"', lambda m: f"r'{m.group(1)}'", code)
     code = re.sub(r'"([^"]*)"', lambda m: f'String("{m.group(1)}")', code)
-    # Booleanos: true/false
-    code = re.sub(r"\b(true|false)\b", lambda m: f"Bool({1 if m.group(1) == 'true' else 0})", code)
+    #null
+    code = re.sub(r"null", "None", code)
+    # Booleanos: true/false/maybe
+    code = re.sub(r"\b(true|false|maybe)\b", lambda m: f"Bool({1 if m.group(1) == 'true' else 0 if m.group(1) == "maybe" else -1})", code)
     # Números (enteros o flotantes, opcional underscore)
     code = re.sub(r"\b[-\+]*?\d+(?:_\d+)*(?:\.\d+)?\b", lambda m: f"Number({m.group(0)})", code)
     # Complex
