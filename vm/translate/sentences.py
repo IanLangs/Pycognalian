@@ -20,4 +20,5 @@ def all(code):
     code = fn(code)
     code = loop(code)
     code = cientific(code)
+    code = anonimus(code)
     return code
