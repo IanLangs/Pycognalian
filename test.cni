@@ -22,10 +22,13 @@ fn main(args):
     i = 9999
     for type in utils.types.__all__:
         write(type)
-    loop:
-        if i < 1e-1.00000008:
-            write(i)
-            i += 0.1
-        else:
-            write(i)
-            i -= 0.1
+    struct person(name, lastname)
+    write(person("miguel", "torres"))
+    if false:
+        loop:
+            if i < 1e-1.00000008:
+                write(i)
+                i += 1
+            else:
+                write(i)
+                i -= 1

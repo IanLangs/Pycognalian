@@ -54,34 +54,150 @@ class String(str):
         return re.split(sep, str(self), maxsplit, flags)
 
 class Number(float):
+    # ======== utilidades internas ========
+    _to_float = staticmethod(lambda number: float(number))
+    @staticmethod
+    def _wrap(value):
+        if isinstance(value, Number):
+            return value
+        return Number(value)
+    
     def int(self):
-        return int(self)
-    def dec(self):
-        return self - self.int()
+        return Number(int(float(self)))
 
+    def dec(self):
+        return Number(self - int(self))
+
+    # ======== operaciones aritméticas ========
+    def __add__(self, other):
+        return Number(float(self) + float(other))
+
+    def __radd__(self, other):
+        return Number(float(other) + float(self))
+
+    def __sub__(self, other):
+        return Number(float(self) - float(other))
+
+    def __rsub__(self, other):
+        return Number(float(other) - float(self))
+
+    def __mul__(self, other):
+        return Number(float(self) * float(other))
+
+    def __rmul__(self, other):
+        return Number(float(other) * float(self))
+
+    def __truediv__(self, other):
+        return Number(float(self) / float(other))
+
+    def __rtruediv__(self, other):
+        return Number(float(other) / float(self))
+
+    def __floordiv__(self, other):
+        return Number(float(self) // float(other))
+
+    def __rfloordiv__(self, other):
+        return Number(float(other) // float(self))
+
+    def __mod__(self, other):
+        return Number(float(self) % float(other))
+
+    def __rmod__(self, other):
+        return Number(float(other) % float(self))
+
+    def __pow__(self, other):
+        return Number(float(self) ** float(other))
+
+    def __rpow__(self, other):
+        return Number(float(other) ** float(self))
+    # ======== unarios ========
+    def __neg__(self):
+        return Number(-float(self))
+
+    def __pos__(self):
+        return Number(+float(self))
+
+    def __abs__(self):
+        return Number(abs(float(self)))
+
+    # ======== redondeos ========
+    def __round__(self, ndigits=None):
+        if ndigits is None:
+            return Number(round(float(self)))
+        return Number(round(float(self), ndigits))
+
+    def __floor__(self):
+        import math
+        return Number(math.floor(float(self)))
+
+    def __ceil__(self):
+        import math
+        return Number(math.ceil(float(self)))
+
+    def __trunc__(self):
+        import math
+        return Number(math.trunc(float(self)))
+
+    # ======== comparaciones (devuelven bool, deben quedar así) ========
+    def __lt__(self, other):
+        return float(self) < float(other)
+
+    def __le__(self, other):
+        return float(self) <= float(other)
+
+    def __gt__(self, other):
+        return float(self) > float(other)
+
+    def __ge__(self, other):
+        return float(self) >= float(other)
+
+    def __eq__(self, other):
+        return float(self) == float(other)
+
+    def __ne__(self, other):
+        return float(self) != float(other)
+
+    # ======== shifts numéricos personalizados ========
     def __rshift__(self, other):
-        if not isinstance(other, Number):
-            other = Number(other)
-        # self >> other
-        return Number(self.int() // (2 ** (other.int())))  # ejemplo: "desplazar a la derecha" divide por potencias de 10
+        return Number(float(self) // (2 ** float(other)))
 
     def __lshift__(self, other):
-        if not isinstance(other, Number):
-            other = Number(other)
-        # self << other
-        return Number(self.int() * (2 ** other.int()))  # ejemplo: "desplazar a la izquierda" multiplica por potencias de 10
+        return Number(float(other) * (2 ** float(self)))
 
     def __rrshift__(self, other):
-        if not isinstance(other, Number):
-            other = Number(other)
-        # other >> self
-        return Number(other.int() // (2 ** (self.int())))
+        return Number(float(other) // (2 ** float(self)))
 
     def __rlshift__(self, other):
-        if not isinstance(other, Number):
-            other = Number(other)
-        # other << self
-        return Number(other.int() * (2 ** self.int()))
+        return Number(float(other) * (2 ** float(self)))
+    #asigancion
+    def __iadd__(self, other):
+        return Number(float(self) + float(other))
+
+    def __isub__(self, other):
+        return Number(float(self) - float(other))
+
+    def __imul__(self, other):
+        return Number(float(self) * float(other))
+
+    def __itruediv__(self, other):
+        return Number(float(self) / float(other))
+
+    def __ifloordiv__(self, other):
+        return Number(float(self) // float(other))
+
+    def __imod__(self, other):
+        return Number(float(self) % float(other))
+
+    def __ipow__(self, other):
+        return Number(float(self) ** float(other))
+
+    # shifts personalizados
+    def __ilshift__(self, other):
+        return Number(float(self) * (2 ** float(other)))
+
+    def __irshift__(self, other):
+        return Number(float(self) // (2 ** float(other)))
+
 class CNum:
     def __init__(self, real=0, imag=0):
         self.real = real
@@ -215,7 +331,7 @@ class regex(_regex.regex):
     class regexCompileTo(_regex.regex.regexCompileTo):pass
 
 class Lambda:
-    def __init__(self, code:str, params:dict[str, Any]):
+    def __init__(self, code:String, params:Dict[str, Any]):
         self.__code__ = code
         self.params = params
         self.__dict__.update(self.params)
@@ -231,4 +347,8 @@ class Lambda:
         else:
             warnings.warn("The function did not execute because the arguments did not match", UserWarning)
 
-
+class Struct(Enum):
+    def __str__(self):
+        sstr = Enum.__str__(self)
+        rstr = sstr.replace(f"Enum {self.__class__.__name__ }", f"struct{(" " + self.__class__.__name__)  if self.__class__.__name__ != "Struct" else ""}")
+        return rstr

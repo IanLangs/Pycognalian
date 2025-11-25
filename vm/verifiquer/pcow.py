@@ -7,7 +7,9 @@ pcow = (r"def",
         r"input",
         r"lambda",
         r"import",
-        r";")
+        r";",
+        r"float",
+        r" int")
 
 def analize(code:str|String, prohibited:list[str]|tuple[str]=()):
     for p in prohibited:

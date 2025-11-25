@@ -7,7 +7,7 @@ def primitive(code):
     #null
     code = re.sub(r"null", "None", code)
     # Booleanos: true/false/maybe
-    code = re.sub(r"\b(true|false|maybe)\b", lambda m: f"Bool({1 if m.group(1) == 'true' else 0 if m.group(1) == "maybe" else -1})", code)
+    code = re.sub(r"\b(true|false|maybe)\b", lambda m: f"Bool({1 if m.group(1) == 'true' else (0 if m.group(1) == "maybe" else -1)})", code)
     # Números (enteros o flotantes, opcional underscore)
     code = re.sub(r"\b[-\+]*?\d+(?:_\d+)*(?:\.\d+)?\b", lambda m: f"Number({m.group(0)})", code)
     # Complex
@@ -17,7 +17,13 @@ def primitive(code):
 
 # Función recursiva para procesar colecciones anidadas
 def parse_collections(code):
+    def repl_struct(m):
+        name = m.group(1)
+        fields = [f.strip() for f in m.group(2).split(",") if f.strip()]
 
+        params = ", ".join(fields)
+        assigns = ", ".join(f"{f}={f}" for f in fields)
+        return f"def {name}({params}):return Struct({assigns})"
     # Diccionarios: {key: value, ...}
     def replace_dict(m):
         inner = m.group(1)
@@ -56,6 +62,7 @@ def parse_collections(code):
     code = re.sub(r"\{([^{}:]*)\}", replace_set, code)
 
     # Listas y tuplas (non-greedy)
+    code = re.sub(r"struct\s+(\w+)\s*\(\s*([a-zA-Z0-9_,\s]+)\)", repl_struct, code)
     code = re.sub(r"\[([^\[\]]*?)\]", replace_list, code)
     code = re.sub(r"([^\s])<(.*)>", replace_index, code)
     code = re.sub(r"\s\(([^\(\)]*?)\)", replace_tuple, code)

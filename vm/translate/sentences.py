@@ -10,7 +10,6 @@ def loop(code):
 def cientific(code):
     return re.sub(r"([-\+]?\d+(?:_\d+)*(?:\.\d+)?)e([-\+]?\d+(?:_\d+)*(?:\.\d+)?)", lambda m: f"scientific({m.group(1)}, {m.group(2)})", code)
 def all(code):
-    code = rw(code)
     code = use(code)
     code = fn(code)
     code = loop(code)

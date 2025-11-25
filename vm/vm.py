@@ -4,6 +4,7 @@ from utils import filesmanipule
 from syntax.buildins import *
 from syntax.classtypes import *
 import utils
+from builtins import exec as xc
 
 def translate(code):
     code = init.analize(code, init.pinit)
@@ -19,12 +20,12 @@ def execute(file):
     code=filesmanipule.rfile(file)
     executeStr(code, file)
 
-def executeStr(code:str, path=None):
+def executeStr(code:str, path:str|None=None):
     code = translate(code)
     if path is None:
-        exec(code, globals(), locals())
+        xc(code, globals=globals(), locals=locals())
     else:
-        exec(code, globals()|{"__file__":path}, locals())
+        xc(code, globals=globals()|{"__file__":path}, locals=locals())
 
 def returned(file):
     code=filesmanipule.rfile(file)
