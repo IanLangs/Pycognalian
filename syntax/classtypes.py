@@ -323,15 +323,11 @@ class Tuple(tuple):pass
 class Dict(dict):
     def getEnum(self) -> Enum:
         return Enum(**dict(self))
-class Set(set):pass
 
 import microlangs.regex as _regex
 class regex(_regex.regex):
     class regexCompile(_regex.regex.regexCompile):pass
     class regexCompileTo(_regex.regex.regexCompileTo):pass
-import microlangs.numberrex as _nre
-class nre(_nre.nre):
-    pass
 class Lambda:
     def __init__(self, code:String, params:dict|tuple|list|Dict|Tuple|List):
         self.__code__ = code

@@ -22,6 +22,7 @@ def execute(file):
 
 def executeStr(code:str, path:str|None=None):
     code = translate(code)
+    code = compile(code, path or "code.cni", "exec")
     if path is None:
         xc(code, globals=globals(), locals=locals())
     else:

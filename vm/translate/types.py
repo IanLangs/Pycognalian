@@ -31,13 +31,6 @@ def parse_collections(code):
         inner = primitive(inner)
         return f"Dict({{{inner}}})"
 
-    # Sets: {item, ...} que no tenga ":" dentro
-    def replace_set(m):
-        inner = m.group(1)
-        inner = parse_collections(inner)
-        inner = primitive(inner)
-        return f"Set({{{inner}}})"
-
     # Listas: [item, ...]
     def replace_list(m):
         inner = m.group(1)
@@ -52,19 +45,18 @@ def parse_collections(code):
         inner = primitive(inner)
         return f"Tuple({inner})"
 
-    def replace_index(m):
-        inner = (m.group(1), m.group(2))
-        if str(inner[0]) != "l":
-            return f"{inner[0]}[{inner[1]}]"
-        return f"[{inner[1]}]"
-    # Diccionarios primero (con ":"), sets después (sin ":")
-    code = re.sub(r"\{([^{}]*:[^{}]*)\}", replace_dict, code)
-    code = re.sub(r"\{([^{}:]*)\}", replace_set, code)
+    def replace_index(m: re.Match):
+        inner1:str = m.group(1)
+        inner2:str = m.group(2)
+        return f"{inner1}[{inner2}]"
+    # Diccionarios primero (con ":")
+    code = re.sub(r"\{(.*)\}", replace_dict, code)
 
     # Listas y tuplas (non-greedy)
     code = re.sub(r"struct\s+(\w+)\s*\(\s*([a-zA-Z0-9_,\s]+)\)", repl_struct, code)
     code = re.sub(r"\[([^\[\]]*?)\]", replace_list, code)
-    code = re.sub(r"([^\s])<(.*)>", replace_index, code)
+    code = re.sub(r"([^\s])<([^<>]*)>", replace_index, code)
+    code = re.sub(r"(>|])<([^<>]*)>", replace_index, code)
     code = re.sub(r"\s\(([^\(\)]*?)\)", replace_tuple, code)
     code = re.sub(r"expr\((.*)\)", lambda m: f"({m.group(1)})", code)
     return code

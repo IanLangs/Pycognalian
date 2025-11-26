@@ -3,7 +3,6 @@ __all__ = (
 funcType := (lambda x:x).__class__,
 LambdaType := Lambda,
 regexType := regex,
-numberexType := nre,
 regexcompileType := regexType.regexCompile(r"\d").__class__,
 regexcompiletoType := regexType["",""].__class__,
 dictType := Dict,

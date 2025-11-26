@@ -5,7 +5,8 @@ class regex:
     match = staticmethod(re.match)
     split = staticmethod(re.split)
     flags = {"D": re.DOTALL, "M": re.MULTILINE, "V": re.VERBOSE, "I": re.IGNORECASE, "U": re.UNICODE}
-
+    def __init__(self, *a, **kw):
+        raise SyntaxError("regex mlang is not callable")
     @classmethod
     def get_flags(cls, chars: str):
         total = 0
