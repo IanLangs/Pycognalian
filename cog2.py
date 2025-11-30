@@ -31,6 +31,7 @@ def main():
         else:
             vm.execute(sys.argv[1])
     else:
-        raise Exception("Usage: cog file or cog -info or cog file -r")
+    raise Exception("Usage: py cog2 file | py cog2 -info | py cog2 file -r | py cog2 file -p file2")
 if __name__ == "__main__":
     main()
+
