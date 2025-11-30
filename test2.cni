@@ -1,8 +1,8 @@
-fn main(args):
-    files = {"nobin": {}}
+
+files = {"nobin": {}}
+write(files.__class__)
+with file("nre.nobin", 'r') as f: #The .nobin file extension is just an example, not an addition.
     write(files.__class__)
-    with file("nre.nobin", 'r') as f: #The .nobin file extension is just an example, not an addition.
-        write(files.__class__)
-        files<"nobin"> |= {"nre":f.read()}
-        write(files.__class__)
-        write(files<'nobin'><'nre'>)
+    files<"nobin"> |= {"nre":f.read()}
+    write(files.__class__)
+    write(files<'nobin'><'nre'>)
