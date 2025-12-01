@@ -5,7 +5,21 @@ from syntax.buildins import *
 from syntax.classtypes import *
 import utils
 from builtins import exec as xc
+import marshal
 
+def eb(file):
+    with open(file, "rb") as f:
+        code = f.read()
+    marshal.loads(code)
+    exec(code)
+
+def cb(file):
+    code=filesmanipule.rfile(file)
+    code = translate(code)
+    code = compile(code, file or "code.cni", "exec")
+    code = marshal.dumps(code)
+    with open(file.replace(".cni", ".cnb"), "wb") as f:
+        f.write(code)
 def translate(code):
     code = pcow.analize(code, pcow.pcow)
     code = comments.all(code)
