@@ -20,6 +20,8 @@ def main():
                 print(vm.returned(sys.argv[1]))
             elif sys.argv[2] == "-cb":
                 vm.cb(sys.argv[1])
+            elif sys.argv[2] == "-eb":
+                vm.eb(sys.argv[1])
             else:
                 raise Exception("mode are invalid")
         else:

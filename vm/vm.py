@@ -4,22 +4,20 @@ from utils import filesmanipule
 from syntax.buildins import *
 from syntax.classtypes import *
 import utils
+import ast, pickle
 from builtins import exec as xc
-import marshal
-
 def eb(file):
     with open(file, "rb") as f:
-        code = f.read()
-    marshal.loads(code)
-    exec(code)
+        tree = pickle.load(f)
+    code = compile(tree, file, mode="exec")
+    xc(code)
 
 def cb(file):
     code=filesmanipule.rfile(file)
     code = translate(code)
-    code = compile(code, file or "code.cni", "exec")
-    code = marshal.dumps(code)
+    tree = ast.parse(code)
     with open(file.replace(".cni", ".cnb"), "wb") as f:
-        f.write(code)
+        pickle.dump(tree, f)
 def translate(code):
     code = pcow.analize(code, pcow.pcow)
     code = comments.all(code)
