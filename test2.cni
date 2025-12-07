@@ -1,4 +1,4 @@
-
+use: subprocess as sub
 files = {"nobin": {}}
 write(files.__class__)
 with file("nre.nobin", 'r') as f: #The .nobin file extension is just an example, not an addition.
@@ -6,3 +6,6 @@ with file("nre.nobin", 'r') as f: #The .nobin file extension is just an example,
     files<"nobin"> |= {"nre":f.read()}
     write(files.__class__)
     write(files<'nobin'><'nre'>)
+
+code = sub.run(["py","cpm.py","--version"],text=True, stdout=sub.DEVNULL, check=True)
+write(code.stdout + "\n" + code.stderr)
