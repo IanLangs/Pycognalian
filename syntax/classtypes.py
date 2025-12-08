@@ -214,15 +214,16 @@ class CNum:
             if not (isinstance(args[0], Number) and isinstance(args[1], Number)):
                 raise TypeError("can't create a cnumber of it real or imag part is a complex or imaginary")
             return cls(args[0], args[1])
+        raise RuntimeError("can't convert args in a number")
 
     def __str__(self):
         return f"{self.real} {"+" if self.imag >= 0 else "-"} {abs(self.imag)}i"
     def __add__(self, other):
-        other = self.convert(other)
+        other = CNum.convert(other)
         return CNum(self.real + other.real, self.imag + other.imag)
 
     def __sub__(self, other):
-        other = self.convert(other)
+        other = CNum.convert(other)
         return CNum(self.real - other.real, self.imag - other.imag)
 
     def __mul__(self, other):
