@@ -1,7 +1,6 @@
 
 use: time
-double = Lambda("x*2.int()", {"x":0})
-write(double.x, double.params, double.__code__, double(x=2), sep="\n", end="\n\n\n\n\n\n\n\n")
+double = Lambda("x*2", {"x":0})
 write(double(x=2))
 name = readInput("what's your name: ")
 surname = readInput("what's your surname: ")
