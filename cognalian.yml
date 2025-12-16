@@ -1,10 +1,12 @@
 "language":
   "name": "cognalian"
-  "filetype": "*.cni"
-  "version": "2.1"
+  "filetype":
+    - "*.cni"
+    - "*.cnb"
+  "version": "2.2"
   "requirements":
     - "signi": "No: reque"
-      1: "python"
+      1: "python3.14"
       2: "py-pip"
       3: "py-pip-ramuel.yaml"
     - "signi": "No:\n\toptional:optional?\n\tcan use other:can use other?"

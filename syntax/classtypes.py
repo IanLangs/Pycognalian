@@ -3,7 +3,10 @@ import re
 import warnings
 from collections import deque
 from typing import Any
-
+import subprocess as sub
+from functools import partial 
+from abc import ABC
+import math
 # ==========================================================
 # Registro central de tipos Cognalian
 # ==========================================================
@@ -138,12 +141,33 @@ for name in dir(str):
 
 @register_type
 class Number(float):
-    def int(self):
-        return Number(int(self))
+    def __truediv__(self, other):
+        try:
+            return wrap_value(float.__truediv__(self, other))
+        except ZeroDivisionError:
+            if self == 0:
+                return Number.nan()
+            return Number.inf(1 if self > 0 else -1)
 
-    def dec(self):
-        return Number(self - int(self))
+    def __rtruediv__(self, other):
+        try:
+            return wrap_value(float.__truediv__(other, self))
+        except ZeroDivisionError:
+            return Number.nan()
 
+    def is_nan(self):
+        return math.isnan(self)
+
+    def is_inf(self):
+        return math.isinf(self)
+
+    @classmethod
+    def nan(cls):
+        return cls(float('nan'))
+
+    @classmethod
+    def inf(cls, sign=1):
+        return cls(float('inf') if sign >= 0 else float('-inf'))
 
 for name in dir(float):
     if name.startswith("__") and name.endswith("__") and not hasattr(Number, name):
@@ -159,9 +183,16 @@ for name in dir(float):
 @register_type
 class CNum:
     def __init__(self, real=0, imag=0):
+        if Number.is_nan(Number(real)) or Number.is_nan(Number(imag)):
+            real = float("nan")
+            imag = float("nan")
         self.real = Number(real)
         self.imag = Number(imag)
-        self._p = complex(real, imag)
+
+        if self.real.is_nan() or self.imag.is_nan():
+            self._p = complex(float("nan"), float("nan"))
+        else:
+            self._p = complex(self.real, self.imag)
 
     @classmethod
     def convert(cls, x):
@@ -191,7 +222,10 @@ class CNum:
 
     def __truediv__(self, other):
         o = CNum.convert(other)
-        res = self._p / o._p
+        try:
+            res = self._p / o._p
+        except ZeroDivisionError:
+            return CNum(float("nan"), float("nan"))
         return CNum(res.real, res.imag)
 
 
@@ -245,6 +279,9 @@ class Lambda:
         else:
             self.params = {p: None for p in params}
 
+    def __getattribute__(self, name):
+        return f"{name} = {self.params[name]}"
+
     def __repr__(self):
         return f"<{self.params} -> {self.__code__}>"
 
@@ -267,3 +304,66 @@ class Lambda:
 class Struct(Enum):
     def __repr__(self):
         return f"<struct -> {self._data}>"
+
+# ==========================================================
+# Time units
+# ==========================================================
+
+class Time:
+    __slots__ = ("timevalue",)
+
+    _factor = 1.0  # Factor base en segundos
+    
+    def __init__(self, timevalue: float):
+        self.timevalue = timevalue
+
+    def to_seconds(self) -> float:
+        """Convierte el valor de tiempo a segundos."""
+        return self.timevalue * self._factor
+
+    @classmethod
+    def from_seconds(cls, seconds: float):
+        """Crea una nueva instancia a partir de un valor en segundos."""
+        return cls(seconds / cls._factor)
+
+    def convert(self, target_cls):
+        """Convierte esta instancia a la clase target_cls (una subclase de Time)."""
+        if not issubclass(target_cls, Time):
+            raise TypeError("Target must be a Time type")
+        return target_cls.from_seconds(self.to_seconds())
+
+    def __add__(self, other):
+        """Suma dos instancias de la misma clase."""
+        if type(self) is not type(other):
+            raise TypeError(f"Cannot add {type(self).__name__} with {type(other).__name__}")
+        return type(self)(self.timevalue + other.timevalue)
+
+    def __repr__(self):
+        return f"{type(self).__name__}({self.timevalue})"
+
+class Seconds(Time):
+    _factor = 1.0 
+
+class Milliseconds(Time):
+    _factor = 0.001 
+
+class Minutes(Time):
+    _factor = 60.0  
+
+class Hours(Time):
+    _factor = 3600.0 
+
+# ==========================================================
+# Comands
+# ==========================================================
+
+class Command:
+    def __init__(
+            self,
+            command_list
+        ):
+        self.c = command_list
+        self.run = partial(sub.run, self.c)
+    
+    def __class_getitem__(cls, items):
+        cls(list(items))

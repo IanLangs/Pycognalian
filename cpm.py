@@ -1,8 +1,9 @@
 import sys, subprocess, re
-file = "/".join(re.split(r"\\|/",__file__)[:-1])
-System = sys.platform
 def main():
-    command = ["pip"] + sys.argv
-    pipr = subprocess.run(command, capture_output=True, text=True, stdout=subprocess.DEVNULL, check=True)
-    code = re.sub(r"pip(\d*)", lambda m:f"cpm{m.group(1)}", pipr.stdout +"\n"+ pipr.stderr)
+    command = ["python3.14", "-m","pip"] + sys.argv[1:]
+    pipr = subprocess.run(command, text=True, capture_output=True)
+    code =  re.sub(r"pip(\d*)", lambda m:f"cpm{m.group(1)}", str(pipr.stdout) +"\n"+ str(pipr.stderr))
     print(f"\n{code}\n")
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,9 @@
+sleep = time.sleep
+stime = 0.1s
+write("antes")
+a = time.now()
+sleep(stime.to_seconds())
+c = time.now() - a
+write("despues")
+write("time = %d" % c)
+write(0 / 0)

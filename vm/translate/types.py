@@ -7,11 +7,23 @@ def primitive(code):
     #null
     code = re.sub(r"null", "None", code)
     # Booleanos: true/false/maybe
-    code = re.sub(r"\b(true|false|maybe)\b", lambda m: f"Bool({1 if m.group(1) == 'true' else (0 if m.group(1) == "maybe" else -1)})", code)
+    code = re.sub(r"\b(true|false|maybe)\b", lambda m: f"Bool({1 if m.group(1) == 'true' else -1})", code)
+    # Units
+    UNITS = {
+        "ms":  "Milliseconds",
+        "s":   "Seconds",
+        "min": "Minutes",
+        "hs":  "Hours",
+    }
+    code = re.sub(r"(\d+(?:\.\d+)?)(ms|s|min|hs)",
+                lambda m:
+                    f"{UNITS[m.group(2)]}({m.group(1)})",
+                code)
     # Números (enteros o flotantes, opcional underscore)
     code = re.sub(r"\b[-\+]*?\d+(?:_\d+)*(?:\.\d+)?\b", lambda m: f"Number({m.group(0)})", code)
     # Complex
     code = re.sub(r"complex\((.*?)\)", lambda m: f"CNum({m.group(1)})", code)
+    
     return code
 
 
